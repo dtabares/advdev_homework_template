@@ -148,7 +148,7 @@ podTemplate(
         //      Make sure the application is running and ready before proceeding
         script {
           openshift.withCluster() {
-            openshift.withProject("${prodProject}") {
+            openshift.withProject("${GUID}-tasks-prod") {
               activeApp = openshift.selector("route", "tasks").object().spec.to.name
               if (activeApp == "tasks-green") {
                 destApp = "tasks-blue"
@@ -159,10 +159,8 @@ podTemplate(
               // Update the Image on the Production Deployment Config
               def dc = openshift.selector("dc/${destApp}").object()
 
-              // OpenShift 4
-              //dc.spec.template.spec.containers[0].image="image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${prodTag}"
               // OpenShift 3
-              dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}"
+              dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${GUID}-tasks-dev/tasks:${prodTag}"
 
               openshift.apply(dc)
 
