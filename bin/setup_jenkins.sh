@@ -17,7 +17,7 @@ oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=4Gi
 oc set resources dc jenkins --limits=memory=4Gi,cpu=2 --requests=memory=2Gi,cpu=500m -n ${GUID}-jenkins
 
 # Create custom agent container image with skopeo
-oc new-build --strategy=docker -D $'FROM quay.io/openshift/origin-jenkins-agent-maven:4.1.0\n
+oc new-build --strategy=docker -D $'FROM docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11\n
    USER root\n
    yum -y install skopeo && yum clean all\n
    USER 1001' --name=jenkins-agent-appdev -n ${GUID}-jenkins
